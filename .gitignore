@@ -1,6 +1,6 @@
 #.DS_Store
 
-*.DS_Store #For Ugur
+.DS_Store #For Ugur
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
