@@ -8,7 +8,7 @@
 
 % ready for submission
 \usepackage{neurips_2023}
-
+\usepackage{pdfpages}
 
 % to compile a preprint version, e.g., for submission to arXiv, add add the
 % [preprint] option:
@@ -34,7 +34,7 @@
 \usepackage{xcolor}         % colors
 
 
-\title{Our Title}
+\title{Adaptive chatbot}
 
 
 % The \author macro works with any number of authors. There are two commands
@@ -54,15 +54,36 @@
 
 
 \begin{abstract}
-  The abstract paragraph should be indented \nicefrac{1}{2}~inch (3~picas) on
-  both the left- and right-hand margins. Use 10~point type, with a vertical
-  spacing (leading) of 11~points.  The word \textbf{Abstract} must be centered,
-  bold, and in point size 12. Two line spaces precede the abstract. The abstract
-  must be limited to one paragraph.
+   We will introduce an adaptive chatbot, leveraging basic decision-tree logic to tailor suggestions based on user preferences and incorporating user feedback to refine its decision-making process. The chatbot starts conversations with users, gathering data about their preferences and adapting its decision tree accordingly. When users provide feedback on recommends something (What the recommendation is, we will decide later on during the project, e.g., Coffee, gaming, Etc), the chatbot dynamically adjusts its future recommendations. This approach showcases the effectiveness of user-driven adaptation in chatbots, illustrating how a straightforward decision-tree logic can create personalized and responsive experiences in recommendation systems.
 \end{abstract}
 
 
-\section{Submission of papers to NeurIPS 2023}
+\section{Decision Tree}
+We will use a flowchart-like structure. In which each internal node represents a "test" on an attribute. Each branch represents the outcome of the test, and each leaf node will then represent a class label, a decision taken after computing all attributes.
 
+\section{Chatbot About}
+We have yet to determine what the chatbot is deciding on. We are brainstorming. Possible chatbots are Nurriture, Drinking, Animals, and cameras.
+
+\section{Implementation}
+\textbf{Programming language:} We will mainly use Python for the programming language.\bigskip \\
+\textbf{Structure:} We are thinking about implementing the Chat-Bot with data in the form of CSV files: 
+\begin{verbatim}
+    Animal, Likes, Agressive, Needs Love, Eats much
+    
+    Cat, 3, Sometimes, Yes, No
+    Dog, 2, Sometimes, Yes, Depends 
+    Cow, 10, Sometimes, Yes, Yes
+\end{verbatim}
+And the chat bot takes then action to respond to the users input based on the data in the CSV file. The respond is then based on our decision tree, which is described in 1.
+\clearpage
+\section{Project plan}
+Please consider our ganttchart.
+Just to be clear Ugur is not sure if this all is correct, please correct Ugur what is missing or wrong:
+\begin{enumerate}
+    \item We have to do a Report about our chapter
+    \item We have to implement a project
+    \item We have to present both at the same date. 
+\end{enumerate}
+Can you also give us the specific date for the presentation? Such that we can update our ganttchart. 
 
 \end{document}
