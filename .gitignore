@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 #.DS_Store
 
 .DS_Store #For Ugur
 
+=======
+# For ugurs server
+# Ignore .DS_Store
+*.DS_Store
+>>>>>>> proposal
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
