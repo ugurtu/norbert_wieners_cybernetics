@@ -3,6 +3,7 @@ import pandas as pd
 __author__ = "Ugur Turhal and Mario Tachikawa"
 __date__ = "11.11.2023"
 __license__ = "MIT"
+
 """
 This class cleanes the CSV data that we have 
 for the movie
