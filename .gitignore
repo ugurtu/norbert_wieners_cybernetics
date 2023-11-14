@@ -8,6 +8,7 @@
 # Ignore .DS_Store
 *.DS_Store
 *.csv
+*.idea
 >>>>>>> proposal
 # Byte-compiled / optimized / DLL files
 __pycache__/
