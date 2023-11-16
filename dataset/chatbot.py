@@ -1,9 +1,7 @@
 import pandas as pd
-import nltk
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
 from joblib import dump, load
-from sklearn.preprocessing import MultiLabelBinarizer
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
@@ -13,24 +11,27 @@ nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
-# Function to load or train the model
-def load_or_train_model():
-    print("Training a new model.")
+# Define a dict of label_encoders
+label_encoders: dict = {}
+
+# Define a model with the Class DecisionTreeClassifier
+model = DecisionTreeClassifier()
+
+#  We define a list of features. The features are:
+#  [genre, stars, year, rating, duration, ...].
+features: list = ['genre', 'stars', 'year']
+target: str = 'movie_title'
+
+
+def train_model():
+    """
+    This function trains reads the data from movies_clean.csv.
+
+    """
     # Load data
     data = pd.read_csv('movies_clean.csv', low_memory=False)
-    #    mlb = MultiLabelBinarizer()
-    #    encoded_data = mlb.fit_transform(data['stars'])
 
-    # Create a DataFrame from the encoded data
-    #    encoded_df = pd.DataFrame(encoded_data, columns=mlb.classes_)
-
-    # Join the encoded data with the original DataFrame
-    #    data = data.join(encoded_df)
-    features = ['genre', 'stars', 'year']
-    target = 'movie_title'
-    data.to_csv("test.csv")
     # Encoding categorical variables
-    label_encoders = {}
     for feature in features:
         le = LabelEncoder()
         data[feature] = le.fit_transform(data[feature])
@@ -40,8 +41,6 @@ def load_or_train_model():
     X = data[features]
     y = data[target]
 
-    # Creating and training the decision tree model
-    model = DecisionTreeClassifier()
     model.fit(X, y)
 
     # Save the trained model and label encoders
@@ -56,7 +55,7 @@ def load_or_train_model():
 
 
 # Load or train the model and label encoders
-model, label_encoders = load_or_train_model()
+model, label_encoders = train_model()
 
 
 # Function for movie recommendations
@@ -73,7 +72,7 @@ def recommend_movie(genre, stars, year):
                     processed_preferences[feature] = le.transform([value])[0]
                 else:
                     print(f"Unseen label for {feature}: {value}")
-                    return "I do not know this combinaiton"
+                    return f"ChatBot: Unseen {feature}: {value} in my dataset."
             else:
                 processed_preferences[feature] = None
         except Exception as e:
@@ -87,6 +86,7 @@ def recommend_movie(genre, stars, year):
     except Exception as e:
         print(f"Error making prediction: {e}")
         return None
+
 
 def retrieve_information(text):
     # Text preprocessing
@@ -107,8 +107,8 @@ def retrieve_information(text):
         genre.replace(" ", "")
         year.replace(" ", "")
         print(genre, stars, year)
-        return recommend_movie(genre,stars,int(year))+"\n"
+        return recommend_movie(genre, stars, int(year)) + "\n"
     else:
-        return ("MovieBot: I am chatbot programmed by Ugur and Mario, I just can recommend movies. "
+        return ("ChatBot: I am chatbot programmed by Ugur and Mario, I just can recommend movies. "
                 "Please use me like that: \n"
                 "Genre,Actor,Year\n")
