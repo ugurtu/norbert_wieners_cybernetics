@@ -148,7 +148,9 @@ class ChatInterface(Frame):
 
 
 root = Tk()
-
+small_icon = tkinter.PhotoImage(file="icon.png")
+large_icon = tkinter.PhotoImage(file="icon.png")
+root.iconphoto(False, large_icon, small_icon)
 a = ChatInterface(root)
 root.geometry(window_size)
 root.title("Movie ChatBot")

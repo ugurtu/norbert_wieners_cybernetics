@@ -109,6 +109,6 @@ def retrieve_information(text):
         print(genre, stars, year)
         return recommend_movie(genre,stars,int(year))+"\n"
     else:
-        return ("I am chatbot programmed by Ugur and Mario, I just can recommend movies.\n"
+        return ("MovieBot: I am chatbot programmed by Ugur and Mario, I just can recommend movies. "
                 "Please use me like that: \n"
                 "Genre,Actor,Year\n")
