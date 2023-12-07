@@ -19,7 +19,7 @@ class Cleaner:
         Reads the original File
         :return:
         """
-        csv = pd.read_csv("data/movies.csv", low_memory=False)
+        csv = pd.read_csv("movies.csv", low_memory=False)
         self.read_csv(csv)
 
     def read_csv(self, csv: pd.DataFrame):
