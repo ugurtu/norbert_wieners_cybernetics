@@ -7,7 +7,6 @@
 # For ugurs server
 # Ignore .DS_Store
 *.DS_Store
-*.csv
 *.idea
 *data/
 *evaluation/
