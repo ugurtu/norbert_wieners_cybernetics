@@ -1,12 +1,8 @@
-certifi @ file:///private/tmp/python-certifi-20231008-5561-13s00fm/certifi-2023.7.22
-cffi @ file:///private/tmp/cffi-20230928-4749-xd5bq7/cffi-1.16.0
-numpy==1.26.2
-packaging @ file:///private/tmp/python-packaging-20231006-5756-1k1e5t6/packaging-23.2
-pandas==2.1.3
-pycparser @ file:///private/tmp/pycparser-20230913-5762-n1zmve/pycparser-2.21
-Pygments @ file:///private/tmp/pygments-20231008-5534-zuvwpt/Pygments-2.16.1
-python-dateutil==2.8.2
-pytz==2023.3.post1
-PyYAML @ file:///private/tmp/pyyaml-20231006-5676-18tnnkv/PyYAML-6.0.1
-six==1.16.0
-tzdata==2023.3
+pyttsx3~=2.90
+nltk~=3.8.1
+seaborn~=0.13.0
+matplotlib~=3.8.2
+scikit-learn~=1.3.2
+joblib~=1.3.2
+pandas~=2.1.3
+numpy~=1.26.2

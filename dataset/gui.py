@@ -2,7 +2,6 @@ from tkinter import *
 import time
 import tkinter.messagebox
 import pyttsx3
-import threading
 import chatbot
 
 saved_username = ["UbTester"]
@@ -30,7 +29,6 @@ class ChatInterface(Frame):
         # File
         file = Menu(menu, tearoff=0)
         menu.add_cascade(label="Movie ChatBox", menu=file)
-        # file.add_command(label="Save Chat Log", command=self.save_chat)
         file.add_command(label="Clear Chat", command=self.clear_chat)
         #  file.add_separator()
         file.add_command(label="Exit", command=self.chatexit)
@@ -121,11 +119,7 @@ class ChatInterface(Frame):
 
     def send_message_insert(self, message):
         user_input = self.entry_field.get()
-        #genre, stars, year = user_input.split(",")
-        #genre.replace(" ", "")
-        #year.replace(" ", "")
-        #print(genre, stars, year)
-        pr1 = "You: " + user_input + "\n"
+        pr1 = "\n You: " + user_input + "\n"
         self.text_box.configure(state=NORMAL)
         self.text_box.insert(END, pr1)
         self.text_box.configure(state=DISABLED)
@@ -135,7 +129,7 @@ class ChatInterface(Frame):
         # This is a simplification, you might need a more advanced processing based on your requirements
 
         recommendation = chatbot.retrieve_information(user_input)
-
+        print(recommendation)
 
         self.text_box.configure(state=NORMAL)
         self.text_box.insert(END, recommendation)
@@ -148,8 +142,8 @@ class ChatInterface(Frame):
 
 
 root = Tk()
-small_icon = tkinter.PhotoImage(file="icon.png")
-large_icon = tkinter.PhotoImage(file="icon.png")
+small_icon = tkinter.PhotoImage(file="icon/icon.png")
+large_icon = tkinter.PhotoImage(file="icon/icon.png")
 root.iconphoto(False, large_icon, small_icon)
 a = ChatInterface(root)
 root.geometry(window_size)

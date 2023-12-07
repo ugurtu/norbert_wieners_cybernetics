@@ -19,7 +19,7 @@ class Cleaner:
         Reads the original File
         :return:
         """
-        csv = pd.read_csv("movies.csv", low_memory=False)
+        csv = pd.read_csv("data/movies.csv", low_memory=False)
         self.read_csv(csv)
 
     def read_csv(self, csv: pd.DataFrame):
@@ -37,26 +37,29 @@ class Cleaner:
 
         df = df.replace(patterns_to_replace, regex=True).fillna(0)
         df['year'] = df['year'].astype(int)
-        # df = df[df['year'] >= 2000]
+
         df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
 
         # ignore all movies without stars
         df = df[df['stars'] != 0]
-        df['stars'] = df['stars'].apply(
-            lambda x: x.split(',')[0].strip() if isinstance(x, str) else x)
+
+        df['stars'] = df['stars'].apply(lambda x: [name.strip() for name in x.split(',')] if isinstance(x, str) else x)
         df = df.explode('stars')
 
-        df['genre'] = df['genre'].apply(
-            lambda x: x.split(',')[0].strip() if isinstance(x, str) else x)
+        df['genre'] = df['genre'].apply(lambda x: [name.strip() for name in x.split(',')] if isinstance(x, str) else x)
         df = df.explode('genre')
-        df['director'] = df['director'].apply(
-            lambda x: x.split(',')[0].strip() if isinstance(x, str) else x)
+
+        df['director'] = df['director'].apply(lambda x: [name.strip() for name in x.split(',')] if isinstance(x, str) else x)
         df = df.explode('director')
         df = df[df['popularity_score'] != 0]
         df.replace(['NA', np.NaN, '', None], 0, inplace=True)
+
+        df = df[df['metascore'] != 0.0]
+        print(df['metascore'])
         df.to_csv("movies_clean.csv")
         print(list(df))
 
 
 cleaner = Cleaner()
 cleaner.get_csv()
+

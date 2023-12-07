@@ -1,56 +1,131 @@
 import pandas as pd
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.preprocessing import LabelEncoder
-from joblib import dump, load
+from joblib import dump
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+from sklearn.metrics import classification_report
+from sklearn.tree import plot_tree
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+import os
+
+import gui
 
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
 # Define a dict of label_encoders
-label_encoders: dict = {}
+label_encoders = {}
 
 # Define a model with the Class DecisionTreeClassifier
 model = DecisionTreeClassifier()
 
-#  We define a list of features. The features are:
-#  [genre, stars, year, rating, duration, ...].
-features: list = ['genre', 'stars', 'year']
-target: str = 'movie_title'
+# Define a list of features
+features = ['year', 'runtime', 'genre', 'director', 'stars']
+target = 'metascore'  # Changed to 'rating_category'
+data = pd.read_csv('data/movies_clean.csv', low_memory=False)
+print(len(data))
 
+
+def categorize_rating(rating):
+    if rating < 25.0:
+        print(rating)
+        return 'Low'
+    elif 25.0 <= rating < 50.0:  # Ratings from 25 (inclusive) to 50 (exclusive)
+        return 'Medium'
+    elif 50.0 <= rating < 75.0:  # Ratings from 50 (inclusive) to 75 (exclusive)
+        return 'High'
+    else:  # Ratings from 75 (inclusive) to 100 (inclusive)
+        return 'Very High'
+
+
+def test_model(model, X, y):
+    print("Testing")
+    # Split the data into training and test sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Fit the model on the training data
+    model.fit(X_train, y_train)
+
+    # Predict on the test data
+    y_pred = model.predict(X_test)
+
+    # Generate the confusion matrix
+    cm = confusion_matrix(y_test, y_pred)
+    print(cm)
+
+    # Visualize the confusion matrix
+    if not os.path.exists("evaluation"):
+        os.mkdir("evaluation")
+    else:
+        os.chdir("evaluation")
+        plt.figure(figsize=(10, 7))
+        sns.heatmap(cm, annot=True)
+        plt.title('Confusion Matrix')
+        plt.ylabel('Actual labels')
+        plt.xlabel('Predicted labels')
+        plt.savefig('confusion_matrix.png')
+        plt.show()
+
+
+    report = classification_report(y_test, y_pred)
+    lines = report.split('\n')
+    report_data = []
+    for line in lines:  # Skip the header and the last few lines
+        row = {}
+        row_data = line.split()  # Splitting by whitespace
+        if len(row_data) >= 5:  # To ensure it's not an empty or malformed line
+            row['class'] = row_data[0]
+            row['precision'] = row_data[1]
+            row['recall'] = row_data[2]
+            row['f1_score'] = row_data[3]
+            row['support'] = row_data[4]  # Support is typically an integer
+            report_data.append(row)
+    dataframe = pd.DataFrame.from_dict(report_data)
+    dataframe.to_csv('classification_report_optimized.csv', index=False)
+    plt.figure(figsize=(20, 10))
+    plot_tree(model, filled=True, feature_names=features, class_names=True, rounded=True,
+              max_depth=True)  # None to visualize the full tree
+    plt.title('Decision Tree (Partial View)')
+    plt.savefig("Decision Tree optimized")
+    plt.show()
+    os.chdir("..")
 
 def train_model():
-    """
-    This function trains reads the data from movies_clean.csv.
-
-    """
-    # Load data
-    data = pd.read_csv('movies_clean.csv', low_memory=False)
-
     # Encoding categorical variables
     for feature in features:
-        le = LabelEncoder()
-        data[feature] = le.fit_transform(data[feature])
-        label_encoders[feature] = le
+        if data[feature].dtype == 'object':
+            le = LabelEncoder()
+            data[feature] = le.fit_transform(data[feature].astype(str))
+            label_encoders[feature] = le
+
+    # Categorize the 'rating' column
+    data['metascore'] = data['metascore'].apply(categorize_rating)
+
+    # Encode the 'rating' column into numerical values
+    le_rating = LabelEncoder()
+    data['metascore'] = le_rating.fit_transform(data['metascore'])
 
     # Preparing data for training
     X = data[features]
     y = data[target]
 
     model.fit(X, y)
-
-    # Save the trained model and label encoders
-    dump(model, 'trained_decision_tree_model.joblib')
-    for feature, le in label_encoders.items():
-        dump(le, f'label_encoder_{feature}.joblib')
-
-    for genre_label in label_encoders['stars'].classes_:
-        print(genre_label)
-
+    if not os.path.exists("joblib"):
+        os.mkdir("joblib")
+    else:
+        os.chdir("joblib")
+        dump(model, 'trained_decision_tree_model.joblib')
+        for feature, le in label_encoders.items():
+            dump(le, f'label_encoder_{feature}.joblib')
+        os.chdir("..")
+    test_model(model, X, y)
     return model, label_encoders
 
 
@@ -58,57 +133,56 @@ def train_model():
 model, label_encoders = train_model()
 
 
-# Function for movie recommendations
-def recommend_movie(genre, stars, year):
-    processed_preferences = {}
+def recommend_movie(movie_attributes):
 
-    # Process each preference
-    features = ['genre', 'stars', 'year']
-    for feature, value in zip(features, [genre, stars, year]):
-        try:
-            le = label_encoders.get(feature)
-            if le:
-                if value in le.classes_:
-                    processed_preferences[feature] = le.transform([value])[0]
-                else:
-                    print(f"Unseen label for {feature}: {value}")
-                    return f"ChatBot: Unseen {feature}: {value} in my dataset."
-            else:
-                processed_preferences[feature] = None
-        except Exception as e:
-            print(f"Error processing feature '{feature}': {e}")
-            return None
+    processed_preferences = {feature: None for feature in features}
+    for feature, value in movie_attributes.items():
+        if feature in label_encoders:
+            le = label_encoders[feature]
+            processed_preferences[feature] = le.transform([str(value)])[0]
+        else:
+            processed_preferences[feature] = value
 
     user_input = pd.DataFrame([processed_preferences])
-    try:
-        recommendation = model.predict(user_input)
-        return recommendation[0]
-    except Exception as e:
-        print(f"Error making prediction: {e}")
-        return None
+    predicted_rating = model.predict(user_input)[0]
+
+    # Filter movies with the predicted rating and other attributes
+    filtered_movies = data[(data['rating'] == predicted_rating)]
+    for feature, value in movie_attributes.items():
+        if feature in label_encoders:
+            filtered_movies = filtered_movies[filtered_movies[feature] == processed_preferences[feature]]
+
+    if not filtered_movies.empty:
+        recommended_movie = filtered_movies.sample(n=1)['movie_title'].iloc[0]
+        return f"ChatBot Response: Recommended movie - {recommended_movie}"
+    else:
+        return "ChatBot: No movie recommendation found for the given attributes."
 
 
 def retrieve_information(text):
+    """
+    Processes user text and generates responses.
+    """
     # Text preprocessing
-    tokens = word_tokenize(text)
-    tokens = [word.lower() for word in tokens if word.isalpha()]  # Remove punctuation and lowercase
-    tokens = [word for word in tokens if word not in stopwords.words('english')]  # Remove stopwords
+    tokens = word_tokenize(text.lower())
+    tokens = [word for word in tokens if word.isalpha()]
+    tokens = [word for word in tokens if word not in stopwords.words('english')]
+    lemma_tizer = WordNetLemmatizer()
+    tokens = [lemma_tizer.lemmatize(word) for word in tokens]
 
-    # Lemmatization
-    lemmatizer = WordNetLemmatizer()
-    tokens = [lemmatizer.lemmatize(word) for word in tokens]
+    # Extracting movie attributes from the input text
+    movie_attributes = {}
 
-    # Example: Simple rule-based response generation
-    if 'movie' in tokens or 'actor' in tokens:
-        return "It seems like you need assistance. for a movie?"
-
-    elif len(text.split(",")) == 3:
-        genre, stars, year = text.split(",")
-        genre.replace(" ", "")
-        year.replace(" ", "")
-        print(genre, stars, year)
-        return recommend_movie(genre, stars, int(year)) + "\n"
+    text_elements = text.split(',')
+    for element in text_elements:
+        key_value = element.split(':')
+        if len(key_value) == 2:
+            key, value = key_value
+            if value.isnumeric():
+                value = int(value)
+            movie_attributes[key.strip().lower()] = value.strip()
+            print(value.title().strip())
+    if movie_attributes:
+        return recommend_movie(movie_attributes)
     else:
-        return ("ChatBot: I am chatbot programmed by Ugur and Mario, I just can recommend movies. "
-                "Please use me like that: \n"
-                "Genre,Actor,Year\n")
+        return "Please specify movie attributes like Genre, Actor, Year, etc."
