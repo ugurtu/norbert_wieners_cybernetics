@@ -27,7 +27,7 @@ model = DecisionTreeClassifier()
 # Define a list of features
 features = ['year', 'runtime', 'genre', 'director', 'stars']
 target = 'metascore'  # Changed to 'rating_category'
-data = pd.read_csv('../data/movies_clean.csv', low_memory=False)
+data = pd.read_csv('data/movies_clean.csv', low_memory=False)
 print(len(data))
 
 
@@ -59,10 +59,10 @@ def test_model(model, X, y):
     print(cm)
 
     # Visualize the confusion matrix
-    if not os.path.exists("../evaluation"):
-        os.mkdir("../evaluation")
+    if not os.path.exists("evaluation"):
+        os.mkdir("evaluation")
     else:
-        os.chdir("../evaluation")
+        os.chdir("evaluation")
         plt.figure(figsize=(10, 7))
         sns.heatmap(cm, annot=True)
         plt.title('Confusion Matrix')
@@ -93,7 +93,7 @@ def test_model(model, X, y):
     plt.title('Decision Tree (Partial View)')
     plt.savefig("Decision Tree optimized")
     plt.show()
-    os.chdir("../..")
+    os.chdir("..")
 
 def train_model():
     # Encoding categorical variables
@@ -115,14 +115,14 @@ def train_model():
     y = data[target]
 
     model.fit(X, y)
-    if not os.path.exists("../joblib"):
-        os.mkdir("../joblib")
+    if not os.path.exists("joblib"):
+        os.mkdir("joblib")
     else:
-        os.chdir("../joblib")
+        os.chdir("joblib")
         dump(model, 'trained_decision_tree_model.joblib')
         for feature, le in label_encoders.items():
             dump(le, f'label_encoder_{feature}.joblib')
-        os.chdir("../..")
+        os.chdir("..")
     test_model(model, X, y)
     return model, label_encoders
 

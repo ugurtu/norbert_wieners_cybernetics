@@ -2,7 +2,7 @@ from tkinter import *
 import time
 import tkinter.messagebox
 import pyttsx3
-from chatbot import chatbot
+import chatbot
 
 saved_username = ["UbTester"]
 ans=["ChatBot"]
@@ -142,8 +142,8 @@ class ChatInterface(Frame):
 
 
 root = Tk()
-small_icon = tkinter.PhotoImage(file="../icon/icon.png")
-large_icon = tkinter.PhotoImage(file="../icon/icon.png")
+small_icon = tkinter.PhotoImage(file="icon.png")
+large_icon = tkinter.PhotoImage(file="icon.png")
 root.iconphoto(False, large_icon, small_icon)
 a = ChatInterface(root)
 root.geometry(window_size)
