@@ -30,6 +30,7 @@ target = 'metascore'  # Changed to 'rating_category'
 data = pd.read_csv('data/movies_clean.csv', low_memory=False)
 print(len(data))
 
+recommended_movies = []
 
 def categorize_rating(rating):
     if rating < 25.0:
@@ -152,6 +153,17 @@ def recommend_movie(movie_attributes):
 
     if not filtered_movies.empty:
         recommended_movie = filtered_movies.sample(n=1)['movie_title'].iloc[0]
+        counter = 4
+        while recommended_movie in recommended_movies:
+            recommended_movie = filtered_movies.sample(n=1)['movie_title'].iloc[0]
+            counter -= 1
+            if counter == 0:
+                recommended_movie = "No other movies"
+                recommended_movies.clear()
+
+        recommended_movies.append(recommended_movie)
+        # This is a satabase for storing the movies
+
         return f"ChatBot Response: Recommended movie - {recommended_movie}"
     else:
         return "ChatBot: No movie recommendation found for the given attributes."
