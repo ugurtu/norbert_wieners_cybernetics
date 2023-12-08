@@ -13,7 +13,7 @@ from sklearn.tree import plot_tree
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 import os
-import gui
+
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
@@ -34,7 +34,6 @@ recommended_movies = []
 
 def categorize_rating(rating):
     if rating < 25.0:
-        print(rating)
         return 'Low'
     elif 25.0 <= rating < 50.0:  # Ratings from 25 (inclusive) to 50 (exclusive)
         return 'Medium'

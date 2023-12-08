@@ -111,7 +111,7 @@ class ChatInterface(Frame):
         exit()
 
     def msg(self):
-        tkinter.messagebox.showinfo("ChatBox for Movies, based on DT")
+        tkinter.messagebox.showinfo("ChatBot for Movies, based on DT")
 
     def about(self):
         tkinter.messagebox.showinfo("Developers",
