@@ -187,6 +187,7 @@ def retrieve_information(text):
 
     # Extracting movie attributes from the input text
     movie_attributes = {}
+    print(tokens)
     if 'I want a movie' in tokens:
         return "Great I am a movie recommendation bot, I can recommend you a movie based on your preferences."
 
@@ -199,7 +200,7 @@ def retrieve_information(text):
     elif ('mario') in tokens or ('tachikawa') in tokens:
         return "Mario is a great TA."
 
-    elif ('boston dynamics') in tokens:
+    elif ('boston') in tokens or ('dynamics') in tokens:
         print(tokens)
         return "ANYmal beats the robots of boston dynamics."
 
@@ -217,3 +218,5 @@ def retrieve_information(text):
             return recommend_movie(movie_attributes)
         else:
             return "ChatBot: Please specify movie attributes like Genre, Actor, Year, etc."
+
+print(retrieve_information("boston dynamics"))
