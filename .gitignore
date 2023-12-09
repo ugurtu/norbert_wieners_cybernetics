@@ -23,7 +23,7 @@ __pycache__/
 *.idea/
 *evaluation/
 *icon/
-*.csv
+data/movies.csv
 *.joblib
 # Distribution / packaging
 .Python
