@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import chatbot
 import gunicorn
+import re
 app = Flask(__name__)
 
 @app.route("/")
@@ -11,8 +12,12 @@ def index():
 @app.route("/get", methods=["GET", "POST"])
 def chat():
     msg = request.form["msg"]
-    input = msg
-    return get_Chat_response(input)
+    # Simple regex to allow only alphanumeric characters and some punctuation
+    if re.match("^[a-zA-Z0-9 .,!?]+$", msg) and (len(msg) < 128):
+        input = re.escape(msg)  # Escaping special characters
+        return get_Chat_response(input)
+    else:
+        return "Invalid input"
 
 
 def get_Chat_response(text):
