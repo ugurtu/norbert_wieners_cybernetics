@@ -167,7 +167,7 @@ def recommend_movie(movie_attributes):
             recommended_movies.append(recommended_movie)
             # This is a satabase for storing the movies
 
-            return "I recommend: the movie:" + recommended_movie
+            return "I recommend: the movie: " + recommended_movie
         else:
             return "No movie recommendation found for the given attributes."
     except:
@@ -217,7 +217,7 @@ def retrieve_information(text):
         if movie_attributes:
             return recommend_movie(movie_attributes)
         else:
-            return "ChatBot: Please specify movie attributes like Genre, Actor, Year, etc."
+            return "Please specify movie attributes like Genre, Actor, Year, etc. "
 
 print(retrieve_information("boston dynamics"))
 print(retrieve_information("boston"))
