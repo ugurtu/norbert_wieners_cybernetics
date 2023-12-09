@@ -15,7 +15,7 @@ def chat():
     # Simple regex to allow only alphanumeric characters and some punctuation
     if re.match("^[a-zA-Z0-9 .,!?:]+$", msg) and (len(msg) < 128):
         input = re.escape(msg)  # Escaping special characters
-        input = input.replace("/","")
+        input = input.replace("\\","")
         return get_Chat_response(input)
     else:
         return "Invalid input"
