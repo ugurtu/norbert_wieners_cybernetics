@@ -20,6 +20,7 @@ def get_Chat_response(text):
     # Let's chat for 5 lines
     return chatbot.retrieve_information(text)
 
-
+"""
 if __name__ == '__main__':
     app.run()
+"""
