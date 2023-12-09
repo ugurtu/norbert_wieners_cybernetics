@@ -179,6 +179,7 @@ def retrieve_information(text):
     Processes user text and generates responses.
     """
     # Text preprocessing
+    print(text)
     tokens = word_tokenize(text.lower())
     tokens = [word for word in tokens if word.isalpha()]
     tokens = [word for word in tokens if word not in stopwords.words('english')]
@@ -188,19 +189,19 @@ def retrieve_information(text):
     # Extracting movie attributes from the input text
     movie_attributes = {}
     print(tokens)
-    if 'I want a movie' in tokens:
+    if 'I want a movie' in text:
         return "Great I am a movie recommendation bot, I can recommend you a movie based on your preferences."
 
-    elif ('ivan') in tokens or ('University of Basel') in tokens or ('Pattern recognition') in tokens or ('Cybernetics') in tokens:
+    elif ('ivan') in text or ('University of Basel') in text or ('Pattern recognition') in text or ('Cybernetics') in text:
         return "I only know Ivan Dokmanic and he is a great professor."
 
-    elif ('ugur') in tokens or ('turhal') in tokens:
+    elif ('ugur') in text or ('turhal') in text:
         return "Ugur is a great TA."
 
-    elif ('mario') in tokens or ('tachikawa') in tokens:
+    elif ('mario') in text or ('tachikawa') in text:
         return "Mario is a great TA."
 
-    elif ('boston') in tokens or ('dynamics') in tokens:
+    elif ('boston') in text and ('dynamics') in text:
         print(tokens)
         return "ANYmal beats the robots of boston dynamics."
 
@@ -220,3 +221,4 @@ def retrieve_information(text):
             return "ChatBot: Please specify movie attributes like Genre, Actor, Year, etc."
 
 print(retrieve_information("boston dynamics"))
+print(retrieve_information("boston"))
