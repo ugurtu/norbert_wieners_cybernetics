@@ -27,7 +27,7 @@ model = DecisionTreeClassifier()
 # Define a list of features
 features = ['genre', 'director', 'stars', 'year', 'runtime']
 target = 'metascore'  # Changed to 'rating_category'
-data = pd.read_csv('../data/movies_clean.csv', low_memory=False)
+data = pd.read_csv('../v2/data/movies_clean.csv', low_memory=False)
 print(len(data))
 
 recommended_movies = []
