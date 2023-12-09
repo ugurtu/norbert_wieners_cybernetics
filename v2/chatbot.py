@@ -218,6 +218,3 @@ def retrieve_information(text):
             return recommend_movie(movie_attributes)
         else:
             return "Please specify movie attributes like Genre, Actor, Year, etc. "
-
-print(retrieve_information("boston dynamics"))
-print(retrieve_information("boston"))
