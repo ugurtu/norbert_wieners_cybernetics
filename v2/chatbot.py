@@ -190,11 +190,14 @@ def retrieve_information(text):
     if 'I want a movie' in tokens:
         return "Great I am a movie recommendation bot, I can recommend you a movie based on your preferences."
 
-    elif ('ivan' or 'University of Basel' or 'Pattern recognition' or 'Cybernetics') in tokens:
+    elif ('ivan') in tokens or ('University of Basel') in tokens or ('Pattern recognition') in tokens or ('Cybernetics') in tokens:
         return "I only know Ivan Dokmanic and he is a great professor."
 
-    elif ('ugur' or 'turhal' or 'mario' or 'tachikawa') in tokens:
-        return "Ugur and Mario are great TAs."
+    elif ('ugur') in tokens or ('turhal') in tokens:
+        return "Ugur is a great TAs."
+
+    elif ('mario') in tokens or ('tachikawa') in tokens:
+        return "Mario is a great TAs."
 
     else:
         text_elements = text.split(',')
