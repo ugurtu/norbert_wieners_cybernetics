@@ -199,7 +199,7 @@ def retrieve_information(text):
     elif ('mario') in tokens or ('tachikawa') in tokens:
         return "Mario is a great TA."
 
-    elif ('boston dynmaics') in tokens:
+    elif 'boston dynmaics' in tokens:
         return "ANYmal beats the robots of boston dynamics."
 
     else:
