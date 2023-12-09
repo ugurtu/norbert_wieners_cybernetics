@@ -194,10 +194,13 @@ def retrieve_information(text):
         return "I only know Ivan Dokmanic and he is a great professor."
 
     elif ('ugur') in tokens or ('turhal') in tokens:
-        return "Ugur is a great TAs."
+        return "Ugur is a great TA."
 
     elif ('mario') in tokens or ('tachikawa') in tokens:
-        return "Mario is a great TAs."
+        return "Mario is a great TA."
+
+    elif ('boston dynmaics') in tokens:
+        return "ANYmal beats the robots of boston dynamics."
 
     else:
         text_elements = text.split(',')
