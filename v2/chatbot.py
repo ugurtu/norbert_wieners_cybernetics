@@ -25,12 +25,13 @@ label_encoders = {}
 model = DecisionTreeClassifier()
 
 # Define a list of features
-features = ['year', 'runtime', 'genre', 'director', 'stars']
+features = ['genre', 'director', 'stars', 'year', 'runtime']
 target = 'metascore'  # Changed to 'rating_category'
 data = pd.read_csv('data/movies_clean.csv', low_memory=False)
 print(len(data))
 
 recommended_movies = []
+
 
 def categorize_rating(rating):
     if rating < 25.0:
@@ -71,7 +72,6 @@ def test_model(model, X, y):
         plt.savefig('confusion_matrix.png')
         plt.show()
 
-
     report = classification_report(y_test, y_pred)
     lines = report.split('\n')
     report_data = []
@@ -95,10 +95,12 @@ def test_model(model, X, y):
     plt.show()
     os.chdir("..")
 
+
 def train_model():
     # Encoding categorical variables
     for feature in features:
         if data[feature].dtype == 'object':
+
             le = LabelEncoder()
             data[feature] = le.fit_transform(data[feature].astype(str))
             label_encoders[feature] = le
@@ -128,44 +130,48 @@ def train_model():
 
 
 # Load or train the model and label encoders
-model, label_encoders = train_model()
+train_model()
 
 
 def recommend_movie(movie_attributes):
+    try:
+        processed_preferences = {feature: None for feature in features}
+        print(processed_preferences)
+        for feature, value in movie_attributes.items():
+            if feature in label_encoders:
+                le = label_encoders[feature]
+                processed_preferences[feature] = le.transform([str(value)])[0]
+                print(processed_preferences[feature])
+            else:
+                processed_preferences[feature] = value
 
-    processed_preferences = {feature: None for feature in features}
-    for feature, value in movie_attributes.items():
-        if feature in label_encoders:
-            le = label_encoders[feature]
-            processed_preferences[feature] = le.transform([str(value)])[0]
-        else:
-            processed_preferences[feature] = value
+        user_input = pd.DataFrame([processed_preferences])
+        predicted_rating = model.predict(user_input)[0]
 
-    user_input = pd.DataFrame([processed_preferences])
-    predicted_rating = model.predict(user_input)[0]
+        # Filter movies with the predicted rating and other attributes
+        filtered_movies = data[(data['metascore'] == predicted_rating)]
+        for feature, value in movie_attributes.items():
+            if feature in label_encoders:
+                filtered_movies = filtered_movies[filtered_movies[feature] == processed_preferences[feature]]
 
-    # Filter movies with the predicted rating and other attributes
-    filtered_movies = data[(data['rating'] == predicted_rating)]
-    for feature, value in movie_attributes.items():
-        if feature in label_encoders:
-            filtered_movies = filtered_movies[filtered_movies[feature] == processed_preferences[feature]]
-
-    if not filtered_movies.empty:
-        recommended_movie = filtered_movies.sample(n=1)['movie_title'].iloc[0]
-        counter = 4
-        while recommended_movie in recommended_movies:
+        if not filtered_movies.empty:
             recommended_movie = filtered_movies.sample(n=1)['movie_title'].iloc[0]
-            counter -= 1
-            if counter == 0:
-                recommended_movie = "No other movies"
-                recommended_movies.clear()
+            counter = 4
+            while recommended_movie in recommended_movies:
+                recommended_movie = filtered_movies.sample(n=1)['movie_title'].iloc[0]
+                counter -= 1
+                if counter == 0:
+                    recommended_movie = " No other movies "
+                    recommended_movies.clear()
 
-        recommended_movies.append(recommended_movie)
-        # This is a satabase for storing the movies
+            recommended_movies.append(recommended_movie)
+            # This is a satabase for storing the movies
 
-        return f"ChatBot Response: Recommended movie - {recommended_movie}"
-    else:
-        return "ChatBot: No movie recommendation found for the given attributes."
+            return "I recommend: the movie:" + recommended_movie
+        else:
+            return "No movie recommendation found for the given attributes."
+    except:
+        return f"Unseen {feature} in my data."
 
 
 def retrieve_information(text):
@@ -181,17 +187,26 @@ def retrieve_information(text):
 
     # Extracting movie attributes from the input text
     movie_attributes = {}
+    if 'I want a movie' in tokens:
+        return "Great I am a movie recommendation bot, I can recommend you a movie based on your preferences."
 
-    text_elements = text.split(',')
-    for element in text_elements:
-        key_value = element.split(':')
-        if len(key_value) == 2:
-            key, value = key_value
-            if value.isnumeric():
-                value = int(value)
-            movie_attributes[key.strip().lower()] = value.strip()
-            print(value.title().strip())
-    if movie_attributes:
-        return recommend_movie(movie_attributes)
+    elif ('ivan' or 'University of Basel' or 'Pattern recognition' or 'Cybernetics') in tokens:
+        return "I only know Ivan Dokmanic and he is a great professor."
+
+    elif ('ugur' or 'turhal' or 'mario' or 'tachikawa') in tokens:
+        return "Ugur and Mario are great TAs."
+
     else:
-        return "Please specify movie attributes like Genre, Actor, Year, etc."
+        text_elements = text.split(',')
+        for element in text_elements:
+            key_value = element.split(':')
+            if len(key_value) == 2:
+                key, value = key_value
+                if value.isnumeric():
+                    value = int(value)
+                movie_attributes[key.strip().lower()] = value.strip()
+                print(value.title().strip())
+        if movie_attributes:
+            return recommend_movie(movie_attributes)
+        else:
+            return "ChatBot: Please specify movie attributes like Genre, Actor, Year, etc."
