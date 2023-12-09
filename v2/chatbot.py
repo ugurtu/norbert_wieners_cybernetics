@@ -202,7 +202,6 @@ def retrieve_information(text):
         return "Mario is a great TA."
 
     elif ('boston') in text and ('dynamics') in text:
-        print(tokens)
         return "ANYmal beats the robots of boston dynamics."
 
     else:
