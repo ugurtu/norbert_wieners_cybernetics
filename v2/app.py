@@ -3,7 +3,7 @@ import chatbot
 import gunicorn
 import re
 app = Flask(__name__)
-
+# pip list --format=freeze > requirements.txt
 @app.route("/")
 def index():
     return render_template('chat.html')
