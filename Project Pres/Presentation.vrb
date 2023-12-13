@@ -1,0 +1,24 @@
+\frametitle{Private Communication Tools}
+\frametitle{Anoynmizing Proxy}
+To avoid this sort of collection metadata two widley used systems for whistleblowsers:
+^^I\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[font=\small,scale=1, transform shape]
+      %\node[criminal,minimum size=1cm,monitor] (A) at (-5,0){};
+      \path (-5,0) node(A) {\includegraphics[width=1.5cm]{png/securedrop.png}};
+      \path (0,0) node(c) {\includegraphics[width=1.5cm]{png/tor.png}};
+^^I
+^^I\node[below] at (A.south) (x) {\textbf{SecureDrop}};
+^^I\node[below] at (c.south) (y) {\textbf{Tor}};
+
+  \end{tikzpicture}
+  \caption{Widley used communcation tools}
+  \end{figure}
+\textbf{\textcolor{red}{Problem, vulnerable to:}}
+\begin{enumerate}[a.]
+\item Global adversairies
+\begin{enumerate}
+\item This could be: Nation state attacks, since they could/can control all nodes in a network.
+\end{enumerate}
+\end{enumerate}
+
