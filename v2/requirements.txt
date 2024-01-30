@@ -10,7 +10,7 @@ Flask==3.0.0
 fonttools==4.46.0
 idna==3.6
 itsdangerous==2.1.2
-Jinja2==3.1.2
+Jinja2==3.1.3
 joblib==1.3.2
 kiwisolver==1.4.5
 macholib==1.16.3
